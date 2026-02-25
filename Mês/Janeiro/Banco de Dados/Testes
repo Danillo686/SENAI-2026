@@ -1,0 +1,102 @@
+CREATE OR REPLACE FUNCTION NOME (PARAM1, PARAM2)--OPCIONAL
+RETURNS TIPO AS --"TIPO" -->VARCHAR, CHAR, INT, ETC--
+
+-- Cria ou substitui uma função chamada EXIBE_MSG que retorna uma mensagem fixa
+CREATE OR REPLACE FUNCTION EXIBE_MSG()
+RETURNS VARCHAR AS 
+$$ 
+DECLARE MSG VARCHAR; -- Declara uma variável chamada MSG
+    BEGIN
+        MSG = 'OLÁ TROPA'; -- Atribui o texto à variável
+        RETURN MSG; -- Retorna a mensagem
+    END;
+$$
+LANGUAGE PLPGSQL;
+
+-- Consulta todos os registros da tabela ITEM_PEDIDO
+SELECT * FROM ITEM_PEDIDO;
+
+-- Executa a função EXIBE_MSG e retorna 'OLÁ TROPA'
+SELECT EXIBE_MSG(); 
+
+
+-- Cria uma função que calcula o produto de dois números
+CREATE OR REPLACE FUNCTION CALCULA(NUM1 NUMERIC(10,2), NUM2 NUMERIC(10, 2))
+RETURNS NUMERIC(10, 2) AS
+$$ 
+    BEGIN
+        RETURN NUM1 * NUM2; -- Multiplica os dois parâmetros
+    END;
+$$
+LANGUAGE PLPGSQL;
+
+-- Testa a função CALCULA com os valores 5 e 11
+SELECT CALCULA(5, 11);
+
+-- Remove a função CALCULA
+DROP FUNCTION CALCULA(NUMERIC, NUMERIC);
+
+-- Usa a função CALCULA para calcular o total de cada item do pedido
+SELECT I.ID_PRODUTO, P.DESCRICAO, I.VALOR_UNITARIO, I.QUANTIDADE,
+CALCULA(QUANTIDADE, VALOR_UNITARIO) AS TOTAL
+FROM ITEM_PEDIDO I, PRODUTO P 
+WHERE P.ID_PRODUTO = I.ID_PRODUTO;
+
+
+-- Cria uma função que calcula a média dos valores unitários de um produto
+CREATE OR REPLACE FUNCTION CALCULA_MEDIA(ID_PRODUTO INT)
+RETURNS NUMERIC AS
+$$
+    DECLARE MEDIA NUMERIC; -- Variável para armazenar a média
+    BEGIN
+        SELECT AVG(VALOR_UNITARIO) INTO MEDIA -- Calcula a média
+        FROM ITEM_PEDIDO
+        WHERE ID_PRODUTO = ID_PROD; 
+        RETURN MEDIA; -- Retorna a média
+    END;
+$$ 
+LANGUAGE PLPGSQL;
+
+-- Executa a função para o produto de ID 2
+SELECT CALCULA_MEDIA(2);
+
+
+-- Cria uma função que retorna um status textual baseado no valor
+CREATE OR REPLACE FUNCTION EXIBE_STATUS(VALOR FLOAT)
+RETURNS TEXT AS $$
+BEGIN
+    IF VALOR < 200 THEN 
+            RETURN 'BARATO';
+        ELSIF VALOR < 500 THEN
+            RETURN 'INTERMEDIARIO';
+        ELSIF VALOR < 1000 THEN 
+            RETURN 'CARO';
+        ELSE 
+            RETURN 'CARISSIMO';
+    END IF;
+END;
+$$ LANGUAGE PLPGSQL;
+
+-- Testa a função com o valor 4000
+SELECT EXIBE_STATUS(4000);
+
+
+-- Consulta todos os produtos ordenados do mais recente para o mais antigo
+SELECT * FROM PRODUTO ORDER BY ID_PRODUTO DESC;
+
+
+-- Cria uma função que insere um produto na tabela PRODUTO
+CREATE OR REPLACE FUNCTION INSERE_PROD(DES TEXT, CAT TEXT, VAL NUMERIC)
+RETURNS VARCHAR AS 
+$$
+    DECLARE MSG TEXT; -- Variável para mensagem de retorno
+    BEGIN
+        INSERT INTO PRODUTO(DESCRICAO, CATEGORIA, PRECO)
+        VALUES(DES, CAT, VAL); -- Insere os dados na tabela
+        MSG = 'PRODUTO SALVO COM SUCESSO'; -- Mensagem de confirmação
+        RETURN MSG; -- Retorna a mensagem
+    END;
+$$ LANGUAGE PLPGSQL;
+
+-- Executa a função para inserir uma caneta
+SELECT INSERE_PROD('CANETA', 'PAPELARIA', 5.25);
