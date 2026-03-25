@@ -1,1 +1,31 @@
+criar o repositório primeiramente
+git clone url do repositorio
+git checkout -b dev -> cria a DEV
+git add . -> seleciona TODOS pro commit
+git commit -m 'Tudo Pronto!' -> mensagem e commit
+git pull origin dev -> puxa tudo da dev caso tenha algo
+git push origin dev -> quando o pull for terminado, fazer o push 
 
+
+--Criar e Verificar se estamos no repositorio
+1. Criar repositorio no gitHub
+2. git clone link_do_repositorio
+3. cd nome_do_repositorio
+4. git remote -v
+5. git pull origin nome_da_branch -> puxa caso tenha algo faltando
+
+--Criar branchs
+1. git checkout -b nome_da_branch
+
+--Entrar nas Branchs
+1. git checkou nome_da_branch -> deve aparecer 'On branch nome_da_branch'
+
+--Commit
+1. git add . -> adiciona todos para comoitar
+2. git commit -m 'Finalizado'
+3. git pull origin nome_da_branch
+4. git push origin nome_da_branch
+
+--Login se precisar
+1. git config --global user.name "Seu Nome"
+2. git config --global user.email "seuemail@exemplo.com"
