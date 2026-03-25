@@ -4,7 +4,7 @@ const pool = new Pool({
     user: 'postgres',
     password: 'senai',
     host: 'localhost',
-    database: 'cria',
+    database: 'cria', -> nome do banco de dados no PgAdmin
     port: '5433'
 })
 
